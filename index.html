@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rn Clan Official Site</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <style>
+        :root {
+            --primary: #a855f7; /* ロゴに合わせたパープル */
+            --accent: #38bdf8;  /* ロゴの光るシアン */
+            --bg-dark: #020617;
+            --card-bg: #0f172a;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #f8fafc;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* ヘッダー */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-area { display: flex; align-items: center; gap: 15px; }
+        .logo-img { height: 45px; border-radius: 8px; border: 1px solid var(--accent); }
+
+        /* ヒーローセクション（背景画像） */
+        .hero {
+            height: 400px;
+            background: linear-gradient(rgba(2,6,23,0.3), rgba(2,6,23,1)), 
+                        url('https://images.unsplash.com/photo-1627398242454-45a1465c2479?auto=format&fit=crop&q=80&w=1500'); /* 代替のマイクラ風背景 */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        /* グリッドレイアウト */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 1fr;
+            gap: 20px;
+            padding: 2rem;
+        }
+
+        article {
+            background-color: var(--card-bg);
+            border: 1px solid #1e293b;
+            padding: 1.5rem;
+            border-radius: 12px;
+        }
+
+        /* メンバーカード */
+        .member-card {
+            text-align: center;
+            border: 2px solid transparent;
+            transition: 0.3s;
+        }
+        .member-card:hover { border-color: var(--accent); transform: translateY(-5px); }
+        .skin-img { width: 80px; height: 80px; border-radius: 10px; margin-bottom: 10px; }
+
+        /* 寄付メーター */
+        .progress-container {
+            background: #334155;
+            border-radius: 20px;
+            height: 25px;
+            margin: 15px 0;
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-bar {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            height: 100%;
+            width: 0%; /* JSで制御 */
+            transition: width 1s ease-in-out;
+        }
+
+        .btn-support { background-color: var(--accent); color: #000; font-weight: bold; border: none; }
+
+        @media (max-width: 900px) {
+            .main-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-area">
+        <img src="Rnクラン.jpg" alt="Rn Logo" class="logo-img">
+        <h2 style="margin:0; font-size: 1.5rem; color: var(--accent);">Rn Clan</h2>
+    </div>
+    <nav>
+        <ul style="margin:0;">
+            <li><a href="#">About</a></li>
+            <li><a href="#">Members</a></li>
+            <li><a href="#">Supporters</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section class="hero">
+    <div>
+        <h1 style="font-size: 3.5rem; margin-bottom: 0;">Rn Clan</h1>
+        <p style="color: var(--accent);">自由で、オープンなマインクラフトクラン</p>
+    </div>
+</section>
+
+<main class="main-grid">
+    
+    <section>
+        <h3>Members</h3>
+        <div id="member-container">
+            </div>
+    </section>
+
+    <section>
+        <h3>Server Status</h3>
+        <article>
+            <h5>Minecraft: Rn.sunaneko1223.com</h5>
+            <p id="mc-status">Checking status...</p>
+            <hr>
+            <h5>Discord: Rn Official</h5>
+            <p>Online: <span id="discord-count">--</span> members</p>
+        </article>
+    </section>
+
+    <section>
+        <h3>Supporters</h3>
+        <article>
+            <h5 style="margin-bottom:0;">Domain Fund</h5>
+            <small>Goal: 2,020 JPY / year</small>
+            
+            <div class="progress-container">
+                <div id="fund-bar" class="progress-bar"></div>
+            </div>
+            <p style="text-align: right;"><span id="current-fund">400</span> / 2,020 JPY</p>
+            
+            <button class="btn-support">Support via OFUSE</button>
+            <p style="font-size: 0.8rem; margin-top: 10px;">Special Thanks: Supporter X, Donator Y</p>
+        </article>
+    </section>
+
+</main>
+
+<footer>
+    <center><small>© 2026 Rn Clan. Developed by Sunaneko.</small></center>
+</footer>
+
+<script>
+    // 1. メンバーデータの管理
+    const members = [
+        { name: "Sunaneko", mcid: "sunaneko1223", role: "Leader" },
+        { name: "Member A", mcid: "Notch", role: "Staff" }
+    ];
+
+    const container = document.getElementById('member-container');
+    members.forEach(m => {
+        const card = document.createElement('article');
+        card.className = 'member-card';
+        card.innerHTML = `
+            <img src="https://mc-heads.net/avatar/${m.mcid}/100" class="skin-img">
+            <div style="font-weight:bold;">${m.name}</div>
+            <small style="color:var(--accent)">${m.role}</small>
+        `;
+        container.appendChild(card);
+    });
+
+    // 2. 寄付メーターの計算
+    const goal = 2020;
+    const current = 400; // ここを書き換える
+    const percent = (current / goal) * 100;
+    document.getElementById('fund-bar').style.width = percent + '%';
+
+    // 3. マイクラサーバーステータス (簡易API連携)
+    async function updateStatus() {
+        try {
+            const res = await fetch('https://api.mcsrvstat.us/2/Rn.sunaneko1223.com');
+            const data = await res.json();
+            document.getElementById('mc-status').innerText = data.online ? 
+                `Online: ${data.players.online} / ${data.players.max}` : "Offline";
+        } catch(e) {
+            document.getElementById('mc-status').innerText = "Status Unavailable";
+        }
+    }
+    updateStatus();
+</script>
+
+</body>
+</html>
