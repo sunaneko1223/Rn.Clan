@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rnクラン | マイクラコミュニティ</title>
+<meta name="description" content="Rnクランは、YouTube発信とDiscord/LINEでのゆるい交流を軸にしたマインクラフトコミュニティです。参加者限定の24時間サバイバルサーバーもあります。">
+<link rel="icon" href="assets/logo.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="starfield"></div>
+<div class="nebula"></div>
+
+<header>
+  <nav class="nav">
+    <a href="#top" class="nav-brand">
+      <img src="assets/logo.png" alt="Rnクラン ロゴ">
+      <span>Rnクラン</span>
+    </a>
+    <div class="nav-links">
+      <a href="#about">クランについて</a>
+      <a href="#members">メンバー</a>
+      <a href="#recruit">参加案内</a>
+      <a href="#gallery">ギャラリー</a>
+      <a href="#youtube">YouTube</a>
+    </div>
+    <div class="nav-cta">
+      <a class="btn btn-line" href="https://line.me/ti/g2/pzDkeWHxCLox4Ch6LYdhTCL0_GAxgLiinrGTmw?utm_source=invitation&utm_medium=link_copy&utm_campaign=default" target="_blank" rel="noopener">LINE</a>
+      <a class="btn btn-discord" href="https://discord.gg/nyccrDxdDQ" target="_blank" rel="noopener">Discordに参加</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero wrap">
+    <img src="assets/logo.png" alt="Rnクラン ロゴ" class="hero-logo">
+    <h1>マイクラで、<span>ゆるく</span>つながるクラン。</h1>
+    <p class="hero-sub">
+      Rnクランは、YouTubeでの発信とDiscord・LINEでのおしゃべりを中心に活動している
+      マインクラフトコミュニティです。参加者限定の24時間サバイバルサーバーもあるので、
+      いつでもふらっと遊びに来てください。
+    </p>
+    <div class="hero-cta">
+      <a class="btn btn-discord" href="https://discord.gg/nyccrDxdDQ" target="_blank" rel="noopener">
+        Discordサーバーに参加する
+      </a>
+      <a class="btn btn-ghost" href="#recruit">参加までの流れを見る</a>
+    </div>
+    <div class="hero-status">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span id="widget-status-text">Discordサーバーの人数を確認中...</span>
+    </div>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section id="about" class="wrap">
+    <span class="eyebrow">About Rnクラン</span>
+    <h2>YouTubeとDiscord、時々サバイバル。</h2>
+    <p class="section-lede">
+      大きな大会も戦績もない、等身大のクランです。それぞれが好きなペースで
+      動画を出したり、雑談したり、サバイバルサーバーで黙々と拠点を作ったり。
+      新規さんが混ざりやすい空気を大事にしています。
+    </p>
+    <div class="about-grid">
+      <div class="about-card slot">
+        <div class="icon">🎬</div>
+        <h3>YouTube発信</h3>
+        <p>メンバーそれぞれがマイクラの動画・配信を投稿。公式チャンネルでは切り抜きもまとめています。</p>
+      </div>
+      <div class="about-card slot">
+        <div class="icon">💬</div>
+        <h3>Discord・LINEで交流</h3>
+        <p>メインの活動場所はDiscord。気軽に参加したい人向けにLINEオープンチャットも用意しています。</p>
+      </div>
+      <div class="about-card slot">
+        <div class="icon">⛏️</div>
+        <h3>24時間サバイバルサーバー</h3>
+        <p>参加者限定で、いつでも入れる24時間稼働のサバイバルサーバーを運営しています。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MEMBERS ============ -->
+  <section id="members" class="wrap">
+    <span class="eyebrow">Members</span>
+    <h2>クランのメンバー</h2>
+    <p class="section-lede">
+      マイクラ内での役割は特に決めていません。強いて言うならDiscordのロールくらい。
+      それぞれ好きなように活動しています。
+    </p>
+
+    <div class="member-grid" id="member-grid"><!-- JS が member.js のデータからカードを生成 --></div>
+
+    <div class="widget-panel slot">
+      <div>
+        <div class="label">現在Discordにオンライン中</div>
+        <div class="count"><span id="widget-online-count">–</span> 人</div>
+      </div>
+      <div id="widget-online-list"></div>
+    </div>
+  </section>
+
+  <!-- ============ RECRUIT ============ -->
+  <section id="recruit" class="wrap">
+    <span class="eyebrow">新規募集</span>
+    <h2>Rnクランへの参加方法</h2>
+    <div class="recruit">
+      <div>
+        <ul class="recruit-list">
+          <li>
+            <span class="mark">1</span>
+            <span><strong>Discordがメイン。</strong>連絡や交流はDiscordサーバーが中心です。LINEオープンチャットのみの参加も可能ですが、Discordへの参加を推奨しています。</span>
+          </li>
+          <li>
+            <span class="mark">2</span>
+            <span><strong>招待リンクから参加。</strong>下のボタンからDiscordサーバー、またはLINEオープンチャットに参加してください。</span>
+          </li>
+          <li>
+            <span class="mark">3</span>
+            <span><strong>自己紹介はお気軽に。</strong>マイクラ歴やプレイスタイルを教えてくれると、他のメンバーとも話が弾みやすいです。</span>
+          </li>
+          <li>
+            <span class="mark">4</span>
+            <span><strong>サバイバルサーバーは参加者限定。</strong>Discordに参加後、サーバー情報をお伝えします。</span>
+          </li>
+        </ul>
+      </div>
+      <div class="recruit-panel slot">
+        <h3>今すぐ参加する</h3>
+        <p>Discord・LINEどちらからでも参加できます。まずは覗いてみるだけでも歓迎です。</p>
+        <div class="recruit-actions">
+          <a class="btn btn-discord" href="https://discord.gg/nyccrDxdDQ" target="_blank" rel="noopener">Discordサーバーに参加</a>
+          <a class="btn btn-line" href="https://line.me/ti/g2/pzDkeWHxCLox4Ch6LYdhTCL0_GAxgLiinrGTmw?utm_source=invitation&utm_medium=link_copy&utm_campaign=default" target="_blank" rel="noopener">LINEオープンチャットに参加</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GALLERY ============ -->
+  <section id="gallery" class="wrap">
+    <span class="eyebrow">Gallery</span>
+    <h2>ギャラリー</h2>
+    <p class="section-lede">
+      建築物やサーバー内のワンシーンを、これから少しずつ追加していく予定です。
+    </p>
+    <div class="gallery-grid" id="gallery-grid"><!-- JS が gallery.js のデータから生成 --></div>
+  </section>
+
+  <!-- ============ YOUTUBE ============ -->
+  <section id="youtube" class="wrap">
+    <span class="eyebrow">YouTube</span>
+    <h2>YouTubeチャンネル</h2>
+    <div class="yt-grid">
+      <a class="yt-card slot" href="https://www.youtube.com/@Rnクラン公式" target="_blank" rel="noopener">
+        <div class="yt-icon">▶</div>
+        <div>
+          <h3>Rnクラン公式</h3>
+          <p>@Rnクラン公式</p>
+        </div>
+        <div class="arrow">↗</div>
+      </a>
+      <a class="yt-card slot" href="https://www.youtube.com/@Rnクラン公式切り抜き" target="_blank" rel="noopener">
+        <div class="yt-icon">▶</div>
+        <div>
+          <h3>Rnクラン公式切り抜き</h3>
+          <p>@Rnクラン公式切り抜き</p>
+        </div>
+        <div class="arrow">↗</div>
+      </a>
+    </div>
+
+    <div class="yt-members-title">メンバー個人チャンネル</div>
+    <div class="yt-members" id="yt-members"><!-- JS が member.js のデータから生成(URL未設定分はサンプルリンク) --></div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="assets/logo.png" alt="Rnクラン ロゴ">
+        <span>Rnクラン</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://discord.gg/nyccrDxdDQ" target="_blank" rel="noopener">Discord</a>
+        <a href="https://line.me/ti/g2/pzDkeWHxCLox4Ch6LYdhTCL0_GAxgLiinrGTmw?utm_source=invitation&utm_medium=link_copy&utm_campaign=default" target="_blank" rel="noopener">LINEオープンチャット</a>
+        <a href="https://www.youtube.com/@Rnクラン公式" target="_blank" rel="noopener">YouTube(公式)</a>
+        <a href="https://www.youtube.com/@Rnクラン公式切り抜き" target="_blank" rel="noopener">YouTube(切り抜き)</a>
+      </div>
+    </div>
+    <div class="footer-note">© Rnクラン — このサイトは非公式のファンメイドではなく、クラン公式のホームページです。</div>
+  </div>
+</footer>
+
+<script src="members.js"></script>
+<script src="gallery.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
