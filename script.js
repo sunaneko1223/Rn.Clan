@@ -17,20 +17,24 @@ function renderMembers() {
   const grid = document.getElementById("member-grid");
   if (!grid) return;
 
-  grid.innerHTML = MEMBERS.map((m) => {
-    const avatar = m.avatarUrl
-      ? `<img src="${m.avatarUrl}" alt="${m.name}" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">`
-      : initials(m.name);
+  // 運営に関わっている人(isStaff: true)だけを掲載する
+  const staff = MEMBERS.filter((m) => m.isStaff);
 
-    return `
-      <div class="member-card slot" data-username="${m.discordUsername}">
-        <div class="member-avatar">${avatar}</div>
-        <div class="member-name">${m.name}</div>
-        <div class="member-handle">@${m.discordUsername}</div>
-        <span class="member-role${m.isAdmin ? " admin" : ""}">${m.role}</span>
-      </div>
-    `;
-  }).join("");
+  if (!staff.length) {
+    grid.innerHTML = `<p style="color:var(--text-dim);font-family:var(--font-mono);font-size:0.85rem;">
+      members.js の isStaff を true にすると、ここに表示されます。
+    </p>`;
+    return;
+  }
+
+  grid.innerHTML = staff.map((m) => `
+    <div class="member-card slot" data-username="${m.discordUsername}">
+      <div class="member-avatar" data-avatar-slot="${m.discordUsername}">${initials(m.name)}</div>
+      <div class="member-name">${m.name}</div>
+      <div class="member-handle">@${m.discordUsername}</div>
+      <span class="member-role${m.isAdmin ? " admin" : ""}">${m.role}</span>
+    </div>
+  `).join("");
 }
 
 /* ---------------- メンバー個人YouTube描画 ---------------- */
@@ -38,12 +42,21 @@ function renderMemberYoutubeLinks() {
   const wrap = document.getElementById("yt-members");
   if (!wrap) return;
 
-  wrap.innerHTML = MEMBERS.map((m) => {
-    const url = m.youtube && m.youtube.length ? m.youtube : YOUTUBE_SAMPLE_URL;
-    const isSample = !(m.youtube && m.youtube.length);
+  const doing = MEMBERS.filter((m) => m.youtube);
+
+  if (!doing.length) {
+    wrap.innerHTML = `<p style="color:var(--text-dim);font-family:var(--font-mono);font-size:0.85rem;">
+      members.js の youtube を true にすると、ここに表示されます。
+    </p>`;
+    return;
+  }
+
+  wrap.innerHTML = doing.map((m) => {
+    const hasUrl = m.youtubeUrl && m.youtubeUrl.length;
+    const url = hasUrl ? m.youtubeUrl : YOUTUBE_SAMPLE_URL;
     return `
       <a class="yt-chip" href="${url}" target="_blank" rel="noopener">
-        ${m.name}${isSample ? "(準備中)" : ""}
+        ${m.name}${hasUrl ? "" : "(準備中)"}
       </a>
     `;
   }).join("");
@@ -106,13 +119,19 @@ async function loadDiscordWidget() {
         : `<span class="online-chip" style="opacity:.6;">クランメンバーは現在オフライン</span>`;
     }
 
-    // メンバーカードにオンラインの緑ドットを付ける
+    // メンバーカードにオンラインの緑ドット & アバター画像を反映
     if (Array.isArray(data.members)) {
-      const onlineNames = new Set(data.members.map((mem) => mem.username));
+      const onlineByUsername = new Map(data.members.map((mem) => [mem.username, mem]));
       document.querySelectorAll(".member-card").forEach((card) => {
         const uname = card.dataset.username;
-        if (onlineNames.has(uname)) {
-          card.style.boxShadow = "0 0 0 1px var(--online)";
+        const mem = onlineByUsername.get(uname);
+        if (!mem) return;
+
+        card.style.boxShadow = "0 0 0 1px var(--online)";
+
+        const slot = card.querySelector(`[data-avatar-slot="${uname}"]`);
+        if (slot && mem.avatar_url) {
+          slot.innerHTML = `<img src="${mem.avatar_url}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">`;
         }
       });
     }
