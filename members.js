@@ -30,7 +30,7 @@ const MEMBERS = [
     role: "管理者・鯖主",
     isAdmin: true,
     isStaff: true,
-    youtube: true,
+    youtube: false,
     youtubeUrl: "http://www.youtube.com/@すなねこ1223"
   },
   {
