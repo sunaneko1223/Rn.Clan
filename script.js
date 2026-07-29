@@ -28,8 +28,8 @@ function renderMembers() {
   }
 
   grid.innerHTML = staff.map((m) => `
-    <div class="member-card slot" data-username="${m.discordUsername}">
-      <div class="member-avatar" data-avatar-slot="${m.discordUsername}">${initials(m.name)}</div>
+    <div class="member-card slot" data-key="${m.name}">
+      <div class="member-avatar" data-avatar-slot="${m.name}">${initials(m.name)}</div>
       <div class="member-name">${m.name}</div>
       <div class="member-handle">@${m.discordUsername}</div>
       <span class="member-role${m.isAdmin ? " admin" : ""}">${m.role}</span>
@@ -98,11 +98,15 @@ async function loadDiscordWidget() {
     const data = await res.json();
 
     // members.js に登録済みのメンバーだけを対象にする(Bot・部外者は除外)
-    // 表示名も Discord から来た生の username ではなく members.js の name を使う
+    // 注意: Discordウィジェットの username は「アカウント名」ではなく
+    // サーバー内の「表示名(ニックネーム)」が返ってくるため、
+    // members.js の discordUsername ではなく name の方で照合する
+    const matchMember = (widgetUsername) =>
+      MEMBERS.find((m) => m.name === widgetUsername) ||
+      MEMBERS.find((m) => m.discordUsername === widgetUsername);
+
     const knownOnline = Array.isArray(data.members)
-      ? data.members
-          .map((mem) => MEMBERS.find((m) => m.discordUsername === mem.username))
-          .filter(Boolean)
+      ? data.members.map((mem) => matchMember(mem.username)).filter(Boolean)
       : [];
 
     if (statusText) {
@@ -121,15 +125,21 @@ async function loadDiscordWidget() {
 
     // メンバーカードにオンラインの緑ドット & アバター画像を反映
     if (Array.isArray(data.members)) {
-      const onlineByUsername = new Map(data.members.map((mem) => [mem.username, mem]));
+      // widget の username(表示名) → 一致した members.js のエントリ、の形にまとめる
+      const onlineByKey = new Map();
+      data.members.forEach((mem) => {
+        const matched = matchMember(mem.username);
+        if (matched) onlineByKey.set(matched.name, mem);
+      });
+
       document.querySelectorAll(".member-card").forEach((card) => {
-        const uname = card.dataset.username;
-        const mem = onlineByUsername.get(uname);
+        const key = card.dataset.key;
+        const mem = onlineByKey.get(key);
         if (!mem) return;
 
         card.style.boxShadow = "0 0 0 1px var(--online)";
 
-        const slot = card.querySelector(`[data-avatar-slot="${uname}"]`);
+        const slot = card.querySelector(`[data-avatar-slot="${key}"]`);
         if (slot && mem.avatar_url) {
           slot.innerHTML = `<img src="${mem.avatar_url}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">`;
         }
