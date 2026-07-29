@@ -84,19 +84,26 @@ async function loadDiscordWidget() {
     if (!res.ok) throw new Error("widget fetch failed");
     const data = await res.json();
 
-    const count = data.presence_count ?? (data.members ? data.members.length : 0);
+    // members.js に登録済みのメンバーだけを対象にする(Bot・部外者は除外)
+    // 表示名も Discord から来た生の username ではなく members.js の name を使う
+    const knownOnline = Array.isArray(data.members)
+      ? data.members
+          .map((mem) => MEMBERS.find((m) => m.discordUsername === mem.username))
+          .filter(Boolean)
+      : [];
 
     if (statusText) {
-      statusText.textContent = `現在 ${count} 人がDiscordにオンライン`;
+      statusText.textContent = `現在 ${knownOnline.length} 人のクランメンバーがオンライン`;
     }
     if (onlineCount) {
-      onlineCount.textContent = count;
+      onlineCount.textContent = knownOnline.length;
     }
-    if (onlineList && Array.isArray(data.members)) {
-      onlineList.innerHTML = data.members
-        .slice(0, 12)
-        .map((mem) => `<span class="online-chip">${mem.username}</span>`)
-        .join("");
+    if (onlineList) {
+      onlineList.innerHTML = knownOnline.length
+        ? knownOnline
+            .map((m) => `<span class="online-chip">${m.name}</span>`)
+            .join("")
+        : `<span class="online-chip" style="opacity:.6;">クランメンバーは現在オフライン</span>`;
     }
 
     // メンバーカードにオンラインの緑ドットを付ける
