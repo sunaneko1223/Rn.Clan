@@ -29,7 +29,7 @@ const MEMBERS = [
     discordUsername: "sunaneko2929",
     role: "管理者・鯖主",
     isAdmin: true,
-    isStaff: false,
+    isStaff: true,
     youtube: false,
     youtubeUrl: ""
   },
@@ -38,7 +38,7 @@ const MEMBERS = [
     discordUsername: "nekottigames",
     role: "管理者",
     isAdmin: true,
-    isStaff: false,
+    isStaff: true,
     youtube: false,
     youtubeUrl: ""
   },
