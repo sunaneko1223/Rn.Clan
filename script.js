@@ -89,8 +89,6 @@ function renderGallery() {
 /* ---------------- Discordウィジェット(オンライン状況) ---------------- */
 async function loadDiscordWidget() {
   const statusText = document.getElementById("widget-status-text");
-  const onlineCount = document.getElementById("widget-online-count");
-  const onlineList = document.getElementById("widget-online-list");
 
   try {
     const res = await fetch(WIDGET_JSON_URL);
@@ -111,16 +109,6 @@ async function loadDiscordWidget() {
 
     if (statusText) {
       statusText.textContent = `現在 ${knownOnline.length} 人のクランメンバーがオンライン`;
-    }
-    if (onlineCount) {
-      onlineCount.textContent = knownOnline.length;
-    }
-    if (onlineList) {
-      onlineList.innerHTML = knownOnline.length
-        ? knownOnline
-            .map((m) => `<span class="online-chip">${m.name}</span>`)
-            .join("")
-        : `<span class="online-chip" style="opacity:.6;">クランメンバーは現在オフライン</span>`;
     }
 
     // メンバーカードにオンラインの緑ドット & アバター画像を反映
