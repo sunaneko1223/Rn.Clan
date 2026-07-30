@@ -7,6 +7,37 @@
 const DISCORD_SERVER_ID = "1486288789402812469";
 const WIDGET_JSON_URL = `https://discord.com/api/guilds/${DISCORD_SERVER_ID}/widget.json`;
 
+/* ---------------- アバターのローカルキャッシュ ----------------
+ * Discordウィジェットは「今オンラインの人」の画像しか返してくれないため、
+ * 一度取得できたアバターURLをブラウザ(localStorage)に保存しておき、
+ * オフラインの間もその画像を表示し続けるための仕組み。
+ * サイトを訪れた人のブラウザごとに保存されるだけで、サーバー等には送られない。
+ */
+const AVATAR_CACHE_KEY = "rnclan-avatar-cache-v1";
+
+function loadAvatarCache() {
+  try {
+    return JSON.parse(localStorage.getItem(AVATAR_CACHE_KEY)) || {};
+  } catch (err) {
+    return {};
+  }
+}
+
+function saveAvatarCache(cache) {
+  try {
+    localStorage.setItem(AVATAR_CACHE_KEY, JSON.stringify(cache));
+  } catch (err) {
+    // プライベートブラウジング等でlocalStorageが使えない場合は諦める(表示には影響なし)
+  }
+}
+
+function setAvatarImage(name, url) {
+  const slot = document.querySelector(`[data-avatar-slot="${name}"]`);
+  if (slot && url) {
+    slot.innerHTML = `<img src="${url}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">`;
+  }
+}
+
 /* ---------------- メンバー描画 ---------------- */
 function initials(name) {
   const trimmed = name.trim();
@@ -35,6 +66,12 @@ function renderMembers() {
       <span class="member-role${m.isAdmin ? " admin" : ""}">${m.role}</span>
     </div>
   `).join("");
+
+  // オフラインでも、前回オンライン時に取れた画像があれば先に表示しておく
+  const cache = loadAvatarCache();
+  staff.forEach((m) => {
+    if (cache[m.name]) setAvatarImage(m.name, cache[m.name]);
+  });
 }
 
 /* ---------------- メンバー個人YouTube描画 ---------------- */
@@ -111,7 +148,7 @@ async function loadDiscordWidget() {
       statusText.textContent = `現在 ${knownOnline.length} 人のクランメンバーがオンライン`;
     }
 
-    // メンバーカードにオンラインの緑ドット & アバター画像を反映
+    // メンバーカードにオンラインの緑ドット & アバター画像を反映 + キャッシュ更新
     if (Array.isArray(data.members)) {
       // widget の username(表示名) → 一致した members.js のエントリ、の形にまとめる
       const onlineByKey = new Map();
@@ -120,6 +157,9 @@ async function loadDiscordWidget() {
         if (matched) onlineByKey.set(matched.name, mem);
       });
 
+      const cache = loadAvatarCache();
+      let cacheChanged = false;
+
       document.querySelectorAll(".member-card").forEach((card) => {
         const key = card.dataset.key;
         const mem = onlineByKey.get(key);
@@ -127,18 +167,22 @@ async function loadDiscordWidget() {
 
         card.style.boxShadow = "0 0 0 1px var(--online)";
 
-        const slot = card.querySelector(`[data-avatar-slot="${key}"]`);
-        if (slot && mem.avatar_url) {
-          slot.innerHTML = `<img src="${mem.avatar_url}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">`;
+        if (mem.avatar_url) {
+          setAvatarImage(key, mem.avatar_url);
+          if (cache[key] !== mem.avatar_url) {
+            cache[key] = mem.avatar_url;
+            cacheChanged = true;
+          }
         }
       });
+
+      if (cacheChanged) saveAvatarCache(cache);
     }
   } catch (err) {
     // ウィジェットが無効化されている/一時的に取得できない場合はサイレントにフォールバック
     if (statusText) {
       statusText.textContent = "Discordサーバーはいつでも参加OKです";
     }
-    if (onlineCount) onlineCount.textContent = "–";
     console.warn("Discord widget を取得できませんでした:", err);
   }
 }
